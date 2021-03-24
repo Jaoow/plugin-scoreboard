@@ -72,7 +72,7 @@ public class PluginScoreboard extends JavaPlugin {
     }
 
     private void loadTasks() {
-        final int timeUpdateScore = getConfig().getInt("scoreboard.update-delay");
+        final int timeUpdateScore = getConfig().getInt("scoreboard.update-delay", 10);
         scheduled.scheduleWithFixedDelay(taskFactory.getScoreUpdateTask(), timeUpdateScore, timeUpdateScore, SECONDS);
     }
 }

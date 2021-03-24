@@ -4,7 +4,10 @@ import com.joaolucas.scoreboard.PluginScoreboard;
 import com.joaolucas.scoreboard.factory.ScoreBoardFactory;
 import com.joaolucas.scoreboard.model.ScoreArgument;
 import com.joaolucas.scoreboard.model.impl.Score;
+import com.joaolucas.scoreboard.model.impl.ScoreLine;
+import com.joaolucas.scoreboard.utils.LineUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -45,11 +48,6 @@ public class ScoreBoardManager {
         final ScoreArgument scoreArg = new Score(sb, obj);
         for (int index = 0; index < lines.size(); index++) {
             String text = lines.get(index);
-
-            if (StringUtils.isBlank(text)) {
-                text = String.valueOf(ChatColor.values()[index]);
-            }
-
             setLine(player, scoreArg, index, text);
         }
 
@@ -69,74 +67,27 @@ public class ScoreBoardManager {
         final ScoreArgument scoreArg = score.getUserScore().get(p);
         for (int index = 0; index < lines.size(); index++) {
             String text = lines.get(index);
-
-            if (StringUtils.isBlank(text)) {
-                text = String.valueOf(ChatColor.values()[index]);
-            }
-
             setLine(p, scoreArg, index, text);
         }
         setScoreBoard(p, scoreArg);
     }
 
     public void setLine(final Player p, final ScoreArgument scoreArg, final Integer line, String text) {
-        final Scoreboard sb = scoreArg.getScore();
+        final Scoreboard score = scoreArg.getScore();
         final Objective obj = scoreArg.getObjective();
 
-        String[] split = text.split("%");
-        String holder = null;
+        // Replace all placeholders
+        text = setPlaceholders(p, text);
 
-        for (String args : split) {
-            args = "%" + args.trim() + "%";
-            if (!text.contains(args)) continue;
+        Team team = score.getTeam("line" + line);
+        if (team == null) team = score.registerNewTeam("line" + line);
 
-            final String placeholder = setPlaceholders(p, args);
-            if (holder == null) {
-                holder = placeholder;
-            }
-            text = text.replace(args, placeholder);
-        }
+        ScoreLine scoreLine = ScoreLine.of(text, line);
+        team.addEntry(scoreLine.getEntry());
+        team.setPrefix(scoreLine.getPrefix());
+        team.setSuffix(scoreLine.getSuffix());
 
-        Team team = sb.getTeam("line" + line);
-        if (team == null) team = sb.registerNewTeam("line" + line);
-
-        if (holder != null) {
-            split = text.split(holder, 2);
-            split[1] = holder + split[1];
-
-            final String color = getLastColors(split[0]);
-            team.addEntry(color + split[0]);
-            team.setSuffix(color + split[1]);
-            obj.getScore(color + split[0]).setScore(line);
-            return;
-        }
-
-        if (text.length() <= 16) {
-            team.addEntry(text);
-            obj.getScore(text).setScore(line);
-            return;
-        }
-
-        if (text.length() <= 32) {
-            final String prefix = text.substring(0, 16);
-            final String color = getLastColors(prefix);
-            final String entry = color + text.substring(16);
-            team.addEntry(entry);
-            team.setPrefix(prefix);
-            obj.getScore(entry).setScore(line);
-            return;
-        }
-
-        final String prefix = text.substring(0, 16);
-        String color = getLastColors(prefix);
-        final String entry = color + text.substring(16, 32);
-        color = getLastColors(entry);
-        final String suffix = color + text.substring(32);
-
-        team.addEntry(entry);
-        team.setPrefix(prefix);
-        team.setSuffix(suffix);
-        obj.getScore(entry).setScore(line);
+        obj.getScore(scoreLine.getEntry()).setScore(line);
     }
 
     public boolean isScore(final Player p) {

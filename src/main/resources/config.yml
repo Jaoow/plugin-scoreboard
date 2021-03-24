@@ -13,5 +13,5 @@ scoreboard:
     - "&3  %player_ip%"
     - ""
     - "&ewww.site.com.br"
-  # Time to update the scoreboard (In Seconds)
-  update-delay: 120
+  # Tempo de atualização em segundos
+  update-delay: 60
