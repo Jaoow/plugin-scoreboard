@@ -1,0 +1,17 @@
+Permission: # All permissions
+  # Permission to hide the scoreboard
+  Hide-Score: "lobby.hide"
+
+scoreboard:
+  title: "&6&lRANK UP"
+  lines:
+    - ""
+    - "&1  %player_gamemode%"
+    - ""
+    - "&2  %player_is_op%"
+    - ""
+    - "&3  %player_ip%"
+    - ""
+    - "&ewww.site.com.br"
+  # Time to update the scoreboard (In Seconds)
+  update-delay: 120

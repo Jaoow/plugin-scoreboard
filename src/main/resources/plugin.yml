@@ -1,0 +1,5 @@
+name: JwScoreboard
+version: 1.0
+author: Jaoow
+depend: [PlaceholderAPI]
+main: com.joaolucas.scoreboard.PluginScoreboard
