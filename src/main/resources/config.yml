@@ -1,16 +1,16 @@
-Permission: # All permissions
-  # Permission to hide the scoreboard
-  Hide-Score: "lobby.hide"
-
+# Configuração da Scoreboard
 scoreboard:
   title: "&6&lRANK UP"
   lines:
     - ""
-    - "&1  %player_gamemode%"
+    - "&fRank: &c%rank_prefix%"
+    - "&fPontos: &7%rank_player_points%/%rank_next_cost%"
+    - "%rank_next_progress_bar% %rank_next_progress%"
     - ""
-    - "&2  %player_is_op%"
+    - "&fClan: &c%simpleclans_clan_tag%"
     - ""
-    - "&3  %player_ip%"
+    - "&fCoins: &e%vault_eco_balance_commas%"
+    - "&fCash: &61.000"
     - ""
     - "&ewww.site.com.br"
   # Tempo de atualização em segundos
