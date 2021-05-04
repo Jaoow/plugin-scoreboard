@@ -6,7 +6,7 @@ import org.bukkit.scoreboard.Scoreboard;
 
 public class Score extends ScoreArgument {
 
-    public Score(final Scoreboard score, final Objective obj) {
+    public Score(Scoreboard score, Objective obj) {
         super(score, obj);
     }
 }

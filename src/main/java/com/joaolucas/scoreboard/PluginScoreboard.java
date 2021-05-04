@@ -3,6 +3,7 @@ package com.joaolucas.scoreboard;
 import com.joaolucas.scoreboard.command.impl.ScoreBoardCommand;
 import com.joaolucas.scoreboard.factory.ScoreBoardFactory;
 import com.joaolucas.scoreboard.factory.TaskFactory;
+import com.joaolucas.scoreboard.listener.ChangeWorldListener;
 import com.joaolucas.scoreboard.listener.JoinQuitListener;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -15,7 +16,6 @@ import java.util.concurrent.ScheduledExecutorService;
 import static java.util.concurrent.Executors.newCachedThreadPool;
 import static java.util.concurrent.Executors.newScheduledThreadPool;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.bukkit.event.HandlerList.unregisterAll;
 
 @Getter
 public class PluginScoreboard extends JavaPlugin {
@@ -60,7 +60,6 @@ public class PluginScoreboard extends JavaPlugin {
 
         executor.shutdown();
         scheduled.shutdown();
-        unregisterAll();
     }
 
     private void loadCommands() {
@@ -69,6 +68,7 @@ public class PluginScoreboard extends JavaPlugin {
 
     private void loadListeners() {
         new JoinQuitListener(this);
+        new ChangeWorldListener(this);
     }
 
     private void loadTasks() {

@@ -1,11 +1,10 @@
 package com.joaolucas.scoreboard.command.impl;
 
-import com.joaolucas.scoreboard.manager.ScoreBoardManager;
 import com.joaolucas.scoreboard.PluginScoreboard;
 import com.joaolucas.scoreboard.command.Command;
+import com.joaolucas.scoreboard.manager.ScoreBoardManager;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 public class ScoreBoardCommand extends Command {
@@ -27,15 +26,18 @@ public class ScoreBoardCommand extends Command {
         final Player player = (Player) sender;
 
         if (args.length == 1) {
-            if (args[0].equalsIgnoreCase("reload")) {
-                if (player.hasPermission("score.reload")) {
-                    score.load();
-                    sender.sendMessage(ChatColor.GREEN + "Scoreboard successfully reloaded.");
-                } else {
-                    sender.sendMessage(ChatColor.RED + "You don't have permission to this.");
-                }
+            if (!args[0].equalsIgnoreCase("reload")) {
                 return true;
             }
+
+            if (player.hasPermission("score.reload")) {
+                score.load();
+                sender.sendMessage(ChatColor.GREEN + "Scoreboard successfully reloaded.");
+            } else {
+                sender.sendMessage(ChatColor.RED + "You don't have permission to this.");
+            }
+            return true;
+
         }
 
         if (score.isScore(player)) {

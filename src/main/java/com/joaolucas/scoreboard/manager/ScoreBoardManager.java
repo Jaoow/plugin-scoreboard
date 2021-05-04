@@ -32,13 +32,14 @@ public class ScoreBoardManager {
     private String title;
     private List<String> lines;
 
-    public ScoreBoardManager(final PluginScoreboard main, final ScoreBoardFactory score) {
+    public ScoreBoardManager(PluginScoreboard main, ScoreBoardFactory score) {
         this.score = score;
         this.config = main.getConfig();
+
         load();
     }
 
-    public void createScoreBoard(final Player player) {
+    public void createScoreBoard(Player player) {
         final Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
         final Objective obj = sb.registerNewObjective("score", "dummy");
 
@@ -55,29 +56,29 @@ public class ScoreBoardManager {
         setScoreBoard(player, scoreArg);
     }
 
-    public void createNoScore(final Player p) {
+    public void createNoScore(Player player) {
         final Scoreboard sb = Bukkit.getScoreboardManager().getNewScoreboard();
         final ScoreArgument scoreArg = new Score(sb, null);
-        score.getUserScore().put(p, scoreArg);
-        setScoreBoard(p, scoreArg);
+        score.getUserScore().put(player, scoreArg);
+        setScoreBoard(player, scoreArg);
     }
 
-    public void updateScore(final Player p) {
-        if (!isScore(p)) return;
-        final ScoreArgument scoreArg = score.getUserScore().get(p);
+    public void updateScore(Player player) {
+        if (!isScore(player)) return;
+        final ScoreArgument scoreArg = score.getUserScore().get(player);
         for (int index = 0; index < lines.size(); index++) {
             String text = lines.get(index);
-            setLine(p, scoreArg, index, text);
+            setLine(player, scoreArg, index, text);
         }
-        setScoreBoard(p, scoreArg);
+        setScoreBoard(player, scoreArg);
     }
 
-    public void setLine(final Player p, final ScoreArgument scoreArg, final Integer line, String text) {
+    public void setLine(Player player, final ScoreArgument scoreArg, final Integer line, String text) {
         final Scoreboard score = scoreArg.getScore();
         final Objective obj = scoreArg.getObjective();
 
         // Replace all placeholders
-        text = setPlaceholders(p, text);
+        text = setPlaceholders(player, text);
 
         Team team = score.getTeam("line" + line);
         if (team == null) team = score.registerNewTeam("line" + line);
@@ -90,14 +91,14 @@ public class ScoreBoardManager {
         obj.getScore(scoreLine.getEntry()).setScore(line);
     }
 
-    public boolean isScore(final Player p) {
-        final Objective obj = score.getUserScore().get(p).getObjective();
+    public boolean isScore(Player player) {
+        final Objective obj = score.getUserScore().get(player).getObjective();
         return obj != null;
     }
 
-    public void setScoreBoard(final Player p, final ScoreArgument score) {
+    public void setScoreBoard(Player player, ScoreArgument score) {
         final Scoreboard sb = score.getScore();
-        p.setScoreboard(sb);
+        player.setScoreboard(sb);
     }
 
     public void load() {
